@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Router from './Router';
 
-function App() {
-  return (
-    <div className="App">
-      Hello, world!
-    </div>
-  );
-}
+const App = () => {
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  return <Router isSignedIn={isSignedIn} />;
+};
 
 export default App;
