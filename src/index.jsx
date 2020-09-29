@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import firebaseConfig from './firebase';
 import firebase from 'firebase/app';
-import App from './App';
+import App from './components/App';
 
 firebase.initializeApp(firebaseConfig);
 
