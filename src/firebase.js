@@ -1,6 +1,5 @@
-import dotenv from 'dotenv'
-
-dotenv.config();
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 // React에서 env를 사용할 때 이름은 REACT_APP으로 시작해야 한다.
 // 아래 API key는 github으로부터 숨긴 것 뿐 빌드 시 사용자들에게 공개될 수 있다.
@@ -16,4 +15,5 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-export default firebaseConfig;
+export const instance = firebase.initializeApp(firebaseConfig);
+export const auth = firebase.auth();

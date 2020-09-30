@@ -4,10 +4,10 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import Home from '../routes/Home';
 import Auth from '../routes/Auth';
 
-const Router = ({ isSignedIn }) => (
+const Router = ({ user }) => (
   <HashRouter>
     <Switch>
-      {isSignedIn
+      {user
         ? (
           <>
             <Route exact path="/">
@@ -25,7 +25,11 @@ const Router = ({ isSignedIn }) => (
 );
 
 Router.propTypes = {
-  isSignedIn: PropTypes.bool.isRequired,
+  user: PropTypes.shape({}),
+};
+
+Router.defaultProps = {
+  user: null,
 };
 
 export default Router;
