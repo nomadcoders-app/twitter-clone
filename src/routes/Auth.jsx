@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase';
+import { firebase, auth } from '../firebase';
 
 const Auth = () => {
   const [input, setInput] = useState({
@@ -19,14 +19,11 @@ const Auth = () => {
     event.preventDefault();
     const { email, password } = input;
     try {
-      let userCredential;
       if (newAccount) {
-        userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        console.log(userCredential);
+        await auth.createUserWithEmailAndPassword(email, password);
       } else {
-        userCredential = await auth.signInWithEmailAndPassword(email, password);
+        await auth.signInWithEmailAndPassword(email, password);
       }
-      const { user } = userCredential;
     } catch (error) {
       const { message } = error;
       setErrorMessage(message);
@@ -34,6 +31,22 @@ const Auth = () => {
   };
 
   const toggleNewAccount = () => setNewAccount((prev) => !prev);
+
+  const onSocialHandler = async (event) => {
+    const { target: { name } } = event;
+    try {
+      let provider;
+      if (name === 'google') {
+        provider = new firebase.auth.GoogleAuthProvider();
+      } else if (name === 'github') {
+        provider = new firebase.auth.GithubAuthProvider();
+      }
+      await auth.signInWithPopup(provider);
+    } catch (error) {
+      const { message } = error;
+      setErrorMessage(message);
+    }
+  };
 
   return (
     <div>
@@ -64,8 +77,18 @@ const Auth = () => {
           {newAccount ? 'Sign In' : 'Sign Up'}
         </span>
       </form>
-      <input type="button" value="Continue with Google" />
-      <input type="button" value="Continue with Github" />
+      <input
+        name="google"
+        type="button"
+        value="Continue with Google"
+        onClick={onSocialHandler}
+      />
+      <input
+        name="github"
+        type="button"
+        value="Continue with Github"
+        onClick={onSocialHandler}
+      />
       {errorMessage}
     </div>
   );
