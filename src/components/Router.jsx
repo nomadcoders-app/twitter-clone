@@ -8,13 +8,13 @@ import Auth from '../routes/Auth';
 
 const Router = ({ user }) => (
   <HashRouter>
-    {user && <Navigation /> }
+    {!!user && <Navigation /> }
     <Switch>
       {user
         ? (
           <>
             <Route exact path="/">
-              <Home />
+              <Home user={user} />
             </Route>
             <Route path="/profile">
               <Profile />
