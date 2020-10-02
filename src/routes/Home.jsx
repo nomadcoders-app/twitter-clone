@@ -10,9 +10,11 @@ const Home = ({ user }) => {
   const [length, setLength] = useState(0);
 
   useEffect(() => {
-    firestore.collection('nweets').onSnapshot((snapshot) => {
-      setNweets(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    });
+    firestore.collection('nweets')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((snapshot) => {
+        setNweets(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      });
   }, []);
 
   const onChange = (event) => {
@@ -24,13 +26,17 @@ const Home = ({ user }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setContent('');
-    const data = await firestore.collection('nweets').add({
-      text: content,
-      creatorId: user.uid,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
+    try {
+      setContent('');
+      await firestore.collection('nweets').add({
+        text: content,
+        creatorId: user.uid,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
