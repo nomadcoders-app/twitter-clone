@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { firestore } from '../firebase';
+import { firestore, storage } from '../firebase';
 
-const Nweet = ({ id, text, isOwner }) => {
+const Nweet = ({
+  id, text, attachmentUrl, isOwner,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newNweet, setNewNweet] = useState('');
 
@@ -10,6 +12,7 @@ const Nweet = ({ id, text, isOwner }) => {
     const ok = window.confirm('Are you sure you want to delete this nweet?');
     if (ok) {
       await firestore.doc(`nweets/${id}`).delete();
+      await storage.refFromURL(attachmentUrl).delete();
     }
   };
 
@@ -57,6 +60,9 @@ const Nweet = ({ id, text, isOwner }) => {
       ) : (
         <>
           <h4>{text}</h4>
+          {!!attachmentUrl && (
+            <img src={attachmentUrl} alt="" width="50px" />
+          )}
           {isOwner && (
           <>
             <input type="button" value="Delete Nweet" onClick={onDelete} />
@@ -73,6 +79,7 @@ const Nweet = ({ id, text, isOwner }) => {
 Nweet.propTypes = {
   id: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
+  attachmentUrl: PropTypes.string.isRequired,
   isOwner: PropTypes.bool.isRequired,
 };
 
