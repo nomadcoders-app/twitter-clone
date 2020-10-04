@@ -6,9 +6,9 @@ import Home from '../routes/Home';
 import Profile from '../routes/Profile';
 import Auth from '../routes/Auth';
 
-const Router = ({ user }) => (
+const Router = ({ user, refreshUser }) => (
   <HashRouter>
-    {!!user && <Navigation /> }
+    {!!user && <Navigation user={user} /> }
     <Switch>
       {user
         ? (
@@ -17,7 +17,10 @@ const Router = ({ user }) => (
               <Home user={user} />
             </Route>
             <Route path="/profile">
-              <Profile />
+              <Profile
+                user={user}
+                refreshUser={refreshUser}
+              />
             </Route>
           </>
         )
@@ -32,10 +35,12 @@ const Router = ({ user }) => (
 
 Router.propTypes = {
   user: PropTypes.shape({}),
+  refreshUser: PropTypes.func,
 };
 
 Router.defaultProps = {
   user: null,
+  refreshUser: () => {},
 };
 
 export default Router;
