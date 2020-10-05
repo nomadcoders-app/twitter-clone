@@ -6,9 +6,8 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [init, setInit] = useState(false);
 
-  useEffect(() => {
-    // user의 상태 변환에 따른 이벤트를 정의한다.
-    auth.onAuthStateChanged((usr) => {
+  useEffect(() => auth.onAuthStateChanged((usr) => {
+    try {
       const { uid, email, displayName } = usr;
       setUser({
         uid,
@@ -18,9 +17,12 @@ const App = () => {
           await usr.updateProfile(profile);
         },
       });
+    } catch {
+      setUser(null);
+    } finally {
       setInit(true);
-    });
-  }, []);
+    }
+  }), []);
 
   const refreshUser = () => {
     const usr = auth.currentUser;
