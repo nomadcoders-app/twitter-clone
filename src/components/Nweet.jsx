@@ -11,8 +11,12 @@ const Nweet = ({
   const onDelete = async () => {
     const ok = window.confirm('Are you sure you want to delete this nweet?');
     if (ok) {
-      await firestore.doc(`nweets/${id}`).delete();
-      await storage.refFromURL(attachmentUrl).delete();
+      try {
+        await firestore.doc(`nweets/${id}`).delete();
+        if (attachmentUrl) await storage.refFromURL(attachmentUrl).delete();
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -29,10 +33,12 @@ const Nweet = ({
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    await firestore.doc(`nweets/${id}`).update({
-      text: newNweet,
-    });
-    toggleIsEditing();
+    try {
+      await firestore.doc(`nweets/${id}`).update({ text: newNweet });
+      toggleIsEditing();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const onCancel = () => {
